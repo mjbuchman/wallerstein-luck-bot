@@ -1,11 +1,17 @@
 from espn_api.football import League
 from tabulate import tabulate
 from dotenv import load_dotenv
+from datetime import date
 import os, discord
 
-currWeek = 8
+today = date.today()
+currDate = date(today.year,today.month,today.day)
+startDate = date(2021,9,13)
+currWeek = ((currDate-startDate).days)//7+2
+currYear = 2021
+
 def calculateLuck():
-	league = League(league_id=1667721, year=2021)
+	league = League(league_id=1667721, year=currYear, espn_s2='AECIpIF9Pcz1tcX4djuq3%2F0wTXHA5mQY8jeJ%2BER6Ef28kErjnPgyeN4XLfzMzlvko5%2F%2FAjyH8BxnysrETw%2FWOwJELD6KKMM9MFXjvlSlL5CjZAkDyp6W9aED%2BNRwYGHXsDFT%2B%2BXjKL0RbMRcnpF8tc5EERHO%2Br1zMzLxwsf2XNw1lFdX1qrx4Bg2ok10ta4oDjNq67supQl51iAFYCSXtnn5I9TUMNuOwJFeCqQRwvFKKf%2F6OLWt20UQX2mxFnVsmTSFOtfGLNsqGLGHJN51SANeHS6waf58c%2Fn61hAHteP5oQ%3D%3D', swid='{9CDAE063-F1E8-4260-B2D9-F457E5214403}')
 
 	actualWins = {}
 	expectedWins = {}
@@ -35,7 +41,8 @@ def calculateLuck():
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+GUILD = os.getenv('DISCORD_GUILD1') # My server
+#GUILD = os.getenv('DISCORD_GUILD2') # Wallerstein
 
 client = discord.Client()
 
@@ -49,7 +56,8 @@ async def on_ready():
 		f'{client.user} is connected to the following guild:\n'
 		f'{guild.name}(id: {guild.id})'
 	)
-	channel = client.get_channel(904773474957033486)
+	channel = client.get_channel(904773474957033486) # My server
+	#channel = client.get_channel(904492778636066890) # Wallerstein
 	await channel.send(f"Here's the Luckiness Differential through Week {currWeek-1}:\n\n`" + calculateLuck() + "`\n*** Positive is luckier, negative is unluckier!")
 	exit(0)
 
