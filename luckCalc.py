@@ -2,7 +2,19 @@ from espn_api.football import League
 from tabulate import tabulate
 from dotenv import load_dotenv
 from datetime import date
-import os, discord
+import os, discord, sys
+
+dest = sys.argv[1]
+
+if(dest.upper() == 'MICHAEL'):
+    guildName = 'DISCORD_GUILD1'
+    channelId = 904773474957033486
+elif(dest.upper() == 'WALLERSTEIN'):
+    guildName = 'DISCORD_GUILD2'
+    channelId = 904492778636066890
+else:
+    print("ERROR: No server name indicated\nUse \'python luckcalc.py {server name}\'")
+    exit(0)
 
 today = date.today()
 currDate = date(today.year,today.month,today.day)
@@ -41,8 +53,7 @@ def calculateLuck():
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD1') # My server
-#GUILD = os.getenv('DISCORD_GUILD2') # Wallerstein
+GUILD = os.getenv(guildName)
 
 client = discord.Client()
 
@@ -56,8 +67,7 @@ async def on_ready():
 		f'{client.user} is connected to the following guild:\n'
 		f'{guild.name}(id: {guild.id})'
 	)
-	channel = client.get_channel(904773474957033486) # My server
-	#channel = client.get_channel(904492778636066890) # Wallerstein
+	channel = client.get_channel(channelId)
 	await channel.send(f"Here's the Luckiness Differential through Week {currWeek-1}:\n\n`" + calculateLuck() + "`\n*** Positive is luckier, negative is unluckier!")
 	exit(0)
 
